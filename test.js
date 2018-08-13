@@ -1,3 +1,5 @@
 const pixiv = require("./app");
+const fs = require("fs");
 
-pixiv.downloadMangaSeries("https://www.pixiv.net/member_illust.php?mode=medium&illust_id=70142396");
+
+pixiv.downloadAll(512849,JSON.parse(fs.readFileSync("./account.json","utf-8")));

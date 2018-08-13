@@ -54,7 +54,7 @@ module.exports = {
             } else func(["https://www.pixiv.net/member_illust.php?mode=medium&illust_id="+id]);
         }
     },
-    getUserWork : function(userID,n = 0,opt){
+    getUserWork : function(userID,opt,n = 0){
         return new Promise((resolve)=>{
             let queryString = qs.stringify({ user_id: userID, filter: 'for_ios', offset : n});
             illust_arr = []
@@ -71,24 +71,26 @@ module.exports = {
                     uri : "https://app-api.pixiv.net/v1/user/illusts?"+queryString,
                     json : true
                 }).then(json => { //232
-                    json.illusts.forEach(el => {
-                        illust_arr.push({
-                            img : el.meta_single_page.original_image_url,
-                            id : el.id
-                        });
-                        resolve((json.illusts != []) ? illust_arr : "limited");
-                    });
+                    if (json != undefined)
+                        json.illusts.forEach(el => {
+                            illust_arr.push({
+                                img : el.meta_single_page.original_image_url,
+                                id : el.id
+                            });
+                            resolve((json.illusts != []) ? illust_arr : "limited");
+                        })
+                    else resolve("limited");    
                 });
             });
         });
     },
-    downloadAll : function(userID,n=0,opt){
-        pixiv.getUserWork(userID,opt).then(res => {
-            pixiv.download(res);
+    downloadAll : function(userID,opt,n=0){
+        this.getUserWork(userID,opt,n).then(res => {
+            this.download(res);
             return res
         }).then(res => {
             if(res != "limited"){
-                downloadAll(userID,n+30);
+                this.downloadAll(userID,opt,n+30);
             }
         });
     },
