@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
     "fs": "0.0.1-security",
     "pixiv-app-api": "^0.11.1",
     "request": "^2.88.0",
